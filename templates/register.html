@@ -1,33 +1,38 @@
 {% extends "base.html" %}
 
-{% block title %}
-    Register
-{% endblock %}
-
+{% block title %}Register{% endblock %}
 
 {% block content %}
-    Hello world!
-    <form method="post" action="/register">
+<div class="auth-container" style="max-width: 400px; margin: 4rem auto;">
+    <div class="dash-card">
+        <h2 style="text-align: center; margin-bottom: 1.5rem; color: var(--primary);">Register</h2>
+        <form method="post" action="/register" style="display: flex; flex-direction: column; gap: 1rem;">
+            <div>
+                <label style="display: block; margin-bottom: 0.5rem; font-weight: 600;">Username</label>
+                <input type="text" name="username" placeholder="Choose a username" required style="margin-bottom: 0;">
+            </div>
 
-        <label>Username</label>
-        <input type="text" name="username">
-        <br>
+            <div>
+                <label style="display: block; margin-bottom: 0.5rem; font-weight: 600;">Password</label>
+                <input type="password" name="password" placeholder="Choose a password" required style="margin-bottom: 0;">
+            </div>
 
-        <label>Password</label>
-        <input type="password" name="password">
-        <br>
+            <div style="display: flex; align-items: center; gap: 0.75rem; margin-top: 0.5rem; padding: 0.5rem; background: rgba(255,255,255,0.5); border-radius: 8px;">
+                <input type="checkbox" name="terms" id="terms" required style="width: auto; margin: 0; cursor: pointer; transform: scale(1.2);">
+                <label for="terms" style="color: var(--text-main); font-size: 0.9rem; cursor: pointer; user-select: none;">
+                    I accept the terms and conditions
+                </label>
+            </div>
 
-        <label>
-            <input type="checkbox" name="terms" required>
-            I accept the terms and conditions
-        </label>
-        <br>
-
-        <button type="reset">
-            Eliminar
-        </button>
-        <button type="submit">
-            Registrarse
-        </button>
-    </form>
+            <div style="display: flex; gap: 1rem; margin-top: 1rem;">
+                <button type="reset" class="btn btn-secondary" style="flex: 1; background: #9ca3af;">Clear</button>
+                <button type="submit" class="btn btn-primary" style="flex: 1;">Register</button>
+            </div>
+            
+            <p style="text-align: center; margin-top: 1rem; font-size: 0.9rem; color: var(--text-muted);">
+                Already have an account? <a href="/login" style="color: var(--primary); font-weight: bold; text-decoration: none;">Login here</a>
+            </p>
+        </form>
+    </div>
+</div>
 {% endblock %}

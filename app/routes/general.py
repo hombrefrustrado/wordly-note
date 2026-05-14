@@ -1,22 +1,52 @@
-from flask import Blueprint, render_template, request, redirect, url_for
+from flask import Blueprint, render_template, request, redirect, url_for, jsonify
 from app.extensions import db
-from app.models import User, Word, UserLanguage
+from app.models import User, Word, UserLanguage, Language
 from werkzeug.security import generate_password_hash
 from werkzeug.security import check_password_hash
 from flask import session
 
 general = Blueprint("general", __name__)
 
-@general.route("/", methods=['GET','POST'])
+@general.route("/", methods=['GET'])
 def dash_board():
+    if not session.get("user_id"):
+        return render_template("index.html", user=None)
+    
+    user = User.query.get(session.get("user_id"))
+    if not user:
+        session.clear()
+        return render_template("index.html", user=None)
+        
+    all_languages = Language.query.all()
+    user_languages = user.languages
+    words = Word.query.filter_by(user_id=user.id).all()
+
     return render_template(
         "index.html",
-        username=session.get("username")
+        user=user,
+        all_languages=all_languages,
+        user_languages=user_languages,
+        words=words
     )
 
 @general.route("/learn")
 def learn():
-    return render_template("learn.html", username= session.get("username"))
+    user_id = session.get("user_id")
+    if not user_id: return redirect(url_for("general.login"))
+    user = User.query.get(user_id)
+    
+    language_id = request.args.get("language_id")
+    topic = request.args.get("topic")
+    
+    if language_id and topic:
+        words = Word.query.filter_by(user_id=user_id, language_id=language_id, topic=topic).all()
+        return render_template("flashcards.html", words=words, language_id=language_id, topic=topic)
+        
+    user_languages = user.languages
+    words = Word.query.filter_by(user_id=user_id).all()
+    topics = list(set([w.topic for w in words if w.topic]))
+    
+    return render_template("learn.html", user_languages=user_languages, topics=topics)
 
 @general.route("/login",methods=["GET", "POST"])
 def login():
@@ -97,3 +127,71 @@ def profile():
         return redirect(url_for("general.dash_board"))
         
     return render_template("profile.html", user=user)
+
+@general.route("/language/add", methods=["POST"])
+def add_language():
+    user_id = session.get("user_id")
+    if not user_id: return redirect(url_for("general.login"))
+    
+    language_id = request.form.get("language_id")
+    if language_id:
+        existing = UserLanguage.query.filter_by(user_id=user_id, language_id=language_id).first()
+        if not existing:
+            new_ul = UserLanguage(user_id=user_id, language_id=language_id)
+            db.session.add(new_ul)
+            db.session.commit()
+    return redirect(url_for("general.dash_board"))
+
+@general.route("/language/remove", methods=["POST"])
+def remove_language():
+    user_id = session.get("user_id")
+    if not user_id: return redirect(url_for("general.login"))
+    
+    language_id = request.form.get("language_id")
+    if language_id:
+        UserLanguage.query.filter_by(user_id=user_id, language_id=language_id).delete()
+        Word.query.filter_by(user_id=user_id, language_id=language_id).delete()
+        db.session.commit()
+    return redirect(url_for("general.dash_board"))
+
+@general.route("/word/add", methods=["POST"])
+def add_word():
+    user_id = session.get("user_id")
+    if not user_id: return redirect(url_for("general.login"))
+    
+    original = request.form.get("original")
+    meaning = request.form.get("meaning")
+    topic = request.form.get("topic")
+    language_id = request.form.get("language_id")
+    
+    if original and meaning and language_id:
+        word = Word(original=original, meaning=meaning, topic=topic, language_id=language_id, user_id=user_id, difficulty=1)
+        db.session.add(word)
+        db.session.commit()
+    return redirect(url_for("general.dash_board"))
+
+@general.route("/word/delete/<int:word_id>", methods=["POST"])
+def delete_word(word_id):
+    user_id = session.get("user_id")
+    if not user_id: return redirect(url_for("general.login"))
+    
+    Word.query.filter_by(id=word_id, user_id=user_id).delete()
+    db.session.commit()
+    return redirect(url_for("general.dash_board"))
+
+@general.route("/api/swipe", methods=["POST"])
+def swipe():
+    user_id = session.get("user_id")
+    if not user_id: return jsonify({"error": "Unauthorized"}), 401
+    
+    data = request.get_json()
+    action = data.get("action")
+    
+    user = User.query.get(user_id)
+    if action == 'right':
+        user.xp += 10
+    else:
+        user.xp += 2
+        
+    db.session.commit()
+    return jsonify({"success": True, "xp": user.xp})

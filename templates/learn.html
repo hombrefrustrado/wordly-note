@@ -1,10 +1,36 @@
 {% extends "base.html" %}
 
-{% block title %}
-    Learn
-{% endblock %}
-
+{% block title %}Learn{% endblock %}
 
 {% block content %}
-    You can select the mode that you want
+<div class="learn-setup-container">
+    <div class="dash-card">
+        <h2>Start Learning</h2>
+        <p>Select a language and a topic to start your flashcard session.</p>
+        
+        <form action="/learn" method="GET" class="learn-form">
+            <div class="form-group">
+                <label for="language_id">Language</label>
+                <select name="language_id" id="language_id" required>
+                    <option value="" disabled selected>Choose a language</option>
+                    {% for lang in user_languages %}
+                    <option value="{{ lang.id }}">{{ lang.name }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            
+            <div class="form-group">
+                <label for="topic">Topic</label>
+                <select name="topic" id="topic" required>
+                    <option value="" disabled selected>Choose a topic</option>
+                    {% for topic in topics %}
+                    <option value="{{ topic }}">{{ topic }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            
+            <button type="submit" class="btn btn-primary btn-large">Start Session</button>
+        </form>
+    </div>
+</div>
 {% endblock %}

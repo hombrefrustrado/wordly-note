@@ -1,0 +1,48 @@
+{% extends "base.html" %}
+
+{% block title %}Flashcards{% endblock %}
+
+{% block content %}
+<div class="flashcards-wrapper">
+    <div class="flashcard-header">
+        <h2>Topic: {{ topic }}</h2>
+        <a href="/learn" class="btn btn-secondary">Back to Setup</a>
+    </div>
+
+    <div class="cards-container" id="cards-container">
+        {% if words %}
+            {% for word in words %}
+            <div class="flashcard" data-id="{{ word.id }}" style="z-index: {{ words|length - loop.index0 }};">
+                <div class="card-front">
+                    <h3>{{ word.original }}</h3>
+                    <p class="hint">Tap to see meaning</p>
+                </div>
+                <div class="card-back">
+                    <h3>{{ word.meaning }}</h3>
+                </div>
+            </div>
+            {% endfor %}
+            <div class="end-message" id="end-message" style="display: none;">
+                <h2>Session Complete!</h2>
+                <p>Great job practicing!</p>
+                <a href="/learn" class="btn btn-primary">Start New Session</a>
+            </div>
+        {% else %}
+            <div class="end-message">
+                <h2>No words found.</h2>
+                <p>Add some words for this language and topic first.</p>
+                <a href="/" class="btn btn-primary">Go to Dashboard</a>
+            </div>
+        {% endif %}
+    </div>
+
+    <div class="swipe-controls">
+        <button id="btn-left" class="swipe-btn left-btn">Forgot ❌</button>
+        <button id="btn-right" class="swipe-btn right-btn">Remembered 💚</button>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_head %}
+<script src="{{ url_for('static', filename='js/app.js') }}" defer></script>
+{% endblock %}

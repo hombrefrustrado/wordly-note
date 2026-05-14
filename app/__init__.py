@@ -22,6 +22,12 @@ def create_app():
     db.init_app(app)
     with app.app_context():
         db.create_all()
+        from app.models.language import Language
+        default_languages = ["English", "Spanish", "French", "German", "Italian", "Portuguese", "Russian", "Japanese", "Korean", "Chinese"]
+        for lang_name in default_languages:
+            if not Language.query.filter_by(name=lang_name).first():
+                db.session.add(Language(name=lang_name))
+        db.session.commit()
     # blueprints
     app.register_blueprint(general)
 

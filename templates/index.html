@@ -1,10 +1,101 @@
 {% extends "base.html" %}
 
-{% block title %}
-    Home
-{% endblock %}
-
+{% block title %}Dashboard{% endblock %}
 
 {% block content %}
-    Hello world!
+{% if user %}
+<div class="dashboard-container">
+    <header class="dash-header">
+        <h1>Welcome back, {{ user.username }}!</h1>
+        <div class="xp-badge">XP: {{ user.xp }}</div>
+    </header>
+
+    <div class="dash-grid">
+        <!-- Languages Section -->
+        <section class="dash-card">
+            <h2>Your Languages</h2>
+            <ul class="language-list">
+                {% for lang in user_languages %}
+                <li>
+                    <span>{{ lang.name }}</span>
+                    <form action="/language/remove" method="POST" style="display:inline;">
+                        <input type="hidden" name="language_id" value="{{ lang.id }}">
+                        <button type="submit" class="btn-icon delete-btn">&times;</button>
+                    </form>
+                </li>
+                {% else %}
+                <p>No languages added yet.</p>
+                {% endfor %}
+            </ul>
+
+            <form action="/language/add" method="POST" class="add-form">
+                <select name="language_id" required>
+                    <option value="" disabled selected>Add a new language...</option>
+                    {% for lang in all_languages %}
+                    <option value="{{ lang.id }}">{{ lang.name }}</option>
+                    {% endfor %}
+                </select>
+                <button type="submit" class="btn btn-primary">Add</button>
+            </form>
+        </section>
+
+        <!-- Words Section -->
+        <section class="dash-card dash-card-large">
+            <h2>Your Vocabulary</h2>
+            
+            <form action="/word/add" method="POST" class="add-word-form">
+                <input type="text" name="original" placeholder="Word" required>
+                <input type="text" name="meaning" placeholder="Meaning" required>
+                <input type="text" name="topic" placeholder="Topic (e.g. Travel)" required>
+                <select name="language_id" required>
+                    <option value="" disabled selected>Language...</option>
+                    {% for lang in user_languages %}
+                    <option value="{{ lang.id }}">{{ lang.name }}</option>
+                    {% endfor %}
+                </select>
+                <button type="submit" class="btn btn-success">Add Word</button>
+            </form>
+
+            <div class="table-container">
+                <table class="words-table">
+                    <thead>
+                        <tr>
+                            <th>Word</th>
+                            <th>Meaning</th>
+                            <th>Topic</th>
+                            <th>Language</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for word in words %}
+                        <tr>
+                            <td>{{ word.original }}</td>
+                            <td>{{ word.meaning }}</td>
+                            <td>{{ word.topic }}</td>
+                            <td>{{ word.language.name }}</td>
+                            <td>
+                                <form action="/word/delete/{{ word.id }}" method="POST" style="display:inline;">
+                                    <button type="submit" class="btn-icon delete-btn">Trash</button>
+                                </form>
+                            </td>
+                        </tr>
+                        {% else %}
+                        <tr>
+                            <td colspan="5" class="text-center">No words added yet. Start building your vocabulary!</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </section>
+    </div>
+</div>
+{% else %}
+<div class="hero-section">
+    <h1>Welcome to EnglishApp</h1>
+    <p>Your ultimate vocabulary companion. Add words, learn languages, and swipe your way to fluency.</p>
+    <a href="/register" class="btn btn-primary btn-large">Get Started</a>
+</div>
+{% endif %}
 {% endblock %}
