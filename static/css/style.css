@@ -72,7 +72,9 @@ body {
 }
 
 /* Typography & General Buttons */
-h1, h2, h3 {
+h1,
+h2,
+h3 {
     margin-bottom: 1rem;
 }
 
@@ -92,6 +94,7 @@ h1, h2, h3 {
     background: var(--primary);
     color: white;
 }
+
 .btn-primary:hover {
     background: var(--primary-hover);
     transform: translateY(-2px);
@@ -101,14 +104,17 @@ h1, h2, h3 {
     background: var(--secondary);
     color: white;
 }
+
 .btn-success {
     background: var(--success);
     color: white;
 }
+
 .btn-large {
     padding: 1rem 2rem;
     font-size: 1.1rem;
 }
+
 .btn-icon {
     background: transparent;
     border: none;
@@ -117,6 +123,7 @@ h1, h2, h3 {
     color: var(--danger);
     transition: transform 0.2s;
 }
+
 .btn-icon:hover {
     transform: scale(1.2);
 }
@@ -127,7 +134,7 @@ h1, h2, h3 {
     padding: 4rem 1rem;
     background: var(--card-bg);
     border-radius: 20px;
-    box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
     backdrop-filter: blur(10px);
 }
 
@@ -165,13 +172,14 @@ h1, h2, h3 {
     background: var(--card-bg);
     padding: 1.5rem;
     border-radius: 16px;
-    box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
     backdrop-filter: blur(10px);
-    border: 1px solid rgba(255,255,255,0.4);
+    border: 1px solid rgba(255, 255, 255, 0.4);
 }
 
 /* Forms & Inputs */
-input, select {
+input,
+select {
     padding: 0.75rem;
     border-radius: 8px;
     border: 1px solid #d1d5db;
@@ -180,7 +188,9 @@ input, select {
     margin-bottom: 1rem;
     width: 100%;
 }
-input:focus, select:focus {
+
+input:focus,
+select:focus {
     border-color: var(--primary);
     box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.2);
 }
@@ -193,7 +203,8 @@ input:focus, select:focus {
     margin-bottom: 1.5rem;
 }
 
-.add-word-form input, .add-word-form select {
+.add-word-form input,
+.add-word-form select {
     margin-bottom: 0;
 }
 
@@ -202,6 +213,7 @@ input:focus, select:focus {
     list-style: none;
     margin-bottom: 1rem;
 }
+
 .language-list li {
     display: flex;
     justify-content: space-between;
@@ -209,7 +221,7 @@ input:focus, select:focus {
     background: white;
     margin-bottom: 0.5rem;
     border-radius: 8px;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.02);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.02);
 }
 
 .table-container {
@@ -221,17 +233,20 @@ input:focus, select:focus {
     border-collapse: collapse;
 }
 
-.words-table th, .words-table td {
+.words-table th,
+.words-table td {
     padding: 1rem;
     text-align: left;
     border-bottom: 1px solid #e5e7eb;
 }
+
 .words-table th {
     font-weight: 600;
     color: var(--text-muted);
 }
+
 .words-table tr:hover {
-    background: rgba(255,255,255,0.5);
+    background: rgba(255, 255, 255, 0.5);
 }
 
 /* Flashcards UI */
@@ -261,7 +276,7 @@ input:focus, select:focus {
     height: 100%;
     background: white;
     border-radius: 20px;
-    box-shadow: 0 10px 40px rgba(0,0,0,0.1);
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -281,7 +296,8 @@ input:focus, select:focus {
     cursor: grabbing;
 }
 
-.card-front, .card-back {
+.card-front,
+.card-back {
     position: absolute;
     width: 100%;
     height: 100%;
@@ -300,7 +316,8 @@ input:focus, select:focus {
     border-radius: 20px;
 }
 
-.card-front h3, .card-back h3 {
+.card-front h3,
+.card-back h3 {
     font-size: 2rem;
     margin-bottom: 0.5rem;
 }
@@ -324,13 +341,14 @@ input:focus, select:focus {
     font-weight: bold;
     cursor: pointer;
     transition: transform 0.2s, box-shadow 0.2s;
-    box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
 }
 
 .left-btn {
     background: white;
     color: var(--danger);
 }
+
 .right-btn {
     background: white;
     color: var(--success);
@@ -338,7 +356,7 @@ input:focus, select:focus {
 
 .swipe-btn:hover {
     transform: translateY(-5px);
-    box-shadow: 0 15px 25px rgba(0,0,0,0.15);
+    box-shadow: 0 15px 25px rgba(0, 0, 0, 0.15);
 }
 
 .end-message {

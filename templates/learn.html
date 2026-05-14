@@ -22,10 +22,7 @@
             <div class="form-group">
                 <label for="topic">Topic</label>
                 <select name="topic" id="topic" required>
-                    <option value="" disabled selected>Choose a topic</option>
-                    {% for topic in topics %}
-                    <option value="{{ topic }}">{{ topic }}</option>
-                    {% endfor %}
+                    <option value="" disabled selected>Choose a language first</option>
                 </select>
             </div>
             
@@ -33,4 +30,28 @@
         </form>
     </div>
 </div>
+
+<script>
+    const topicsByLanguage = {{ topics_by_language | tojson | safe }};
+    
+    document.addEventListener("DOMContentLoaded", () => {
+        const langSelect = document.getElementById("language_id");
+        const topicSelect = document.getElementById("topic");
+        
+        langSelect.addEventListener("change", (e) => {
+            const langId = e.target.value;
+            const topics = topicsByLanguage[langId] || [];
+            
+            // Clear current options
+            topicSelect.innerHTML = '<option value="" disabled selected>Choose a topic</option>';
+            
+            topics.forEach(topic => {
+                const opt = document.createElement("option");
+                opt.value = topic;
+                opt.textContent = topic;
+                topicSelect.appendChild(opt);
+            });
+        });
+    });
+</script>
 {% endblock %}

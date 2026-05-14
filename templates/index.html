@@ -18,7 +18,7 @@
                 {% for lang in user_languages %}
                 <li>
                     <span>{{ lang.name }}</span>
-                    <form action="/language/remove" method="POST" style="display:inline;">
+                    <form action="/language/remove" method="POST" style="display:inline;" class="remove-language-form">
                         <input type="hidden" name="language_id" value="{{ lang.id }}">
                         <button type="submit" class="btn-icon delete-btn">&times;</button>
                     </form>
@@ -28,7 +28,7 @@
                 {% endfor %}
             </ul>
 
-            <form action="/language/add" method="POST" class="add-form">
+            <form action="/language/add" method="POST" class="add-language-form">
                 <select name="language_id" required>
                     <option value="" disabled selected>Add a new language...</option>
                     {% for lang in all_languages %}
@@ -56,6 +56,17 @@
                 <button type="submit" class="btn btn-success">Add Word</button>
             </form>
 
+            <form action="/word/import" method="POST" enctype="multipart/form-data" class="add-word-form" style="margin-top: 1rem; padding-top: 1rem; border-top: 1px solid #e5e7eb;">
+                <input type="file" name="json_file" accept=".json" required style="padding: 0.5rem;">
+                <select name="language_id" required>
+                    <option value="" disabled selected>Language to import to...</option>
+                    {% for lang in user_languages %}
+                    <option value="{{ lang.id }}">{{ lang.name }}</option>
+                    {% endfor %}
+                </select>
+                <button type="submit" class="btn btn-primary" style="grid-column: span 1;">Import JSON</button>
+            </form>
+
             <div class="table-container">
                 <table class="words-table">
                     <thead>
@@ -75,7 +86,7 @@
                             <td>{{ word.topic }}</td>
                             <td>{{ word.language.name }}</td>
                             <td>
-                                <form action="/word/delete/{{ word.id }}" method="POST" style="display:inline;">
+                                <form action="/word/delete/{{ word.id }}" method="POST" style="display:inline;" class="delete-word-form">
                                     <button type="submit" class="btn-icon delete-btn">Trash</button>
                                 </form>
                             </td>
@@ -98,4 +109,172 @@
     <a href="/register" class="btn btn-primary btn-large">Get Started</a>
 </div>
 {% endif %}
+
+<script>
+document.addEventListener("DOMContentLoaded", () => {
+    const addWordForm = document.querySelector('form[action="/word/add"]');
+    const wordsTableBody = document.querySelector('.words-table tbody');
+    const addLangForm = document.querySelector('.add-language-form');
+    const langList = document.querySelector('.language-list');
+    const addWordLangSelects = document.querySelectorAll('select[name="language_id"]');
+    
+    // -- Languages Asynchronous Logic --
+    if (addLangForm) {
+        addLangForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const formData = new FormData(addLangForm);
+            try {
+                const response = await fetch('/language/add', {
+                    method: 'POST',
+                    body: formData,
+                    headers: { 'Accept': 'application/json' }
+                });
+                const data = await response.json();
+                if (data.success) {
+                    addLangForm.reset();
+                    const noLangs = langList.querySelector('p');
+                    if (noLangs) noLangs.remove();
+                    
+                    const lang = data.language;
+                    const li = document.createElement('li');
+                    li.innerHTML = `
+                        <span>${lang.name}</span>
+                        <form action="/language/remove" method="POST" style="display:inline;" class="remove-language-form">
+                            <input type="hidden" name="language_id" value="${lang.id}">
+                            <button type="submit" class="btn-icon delete-btn">&times;</button>
+                        </form>
+                    `;
+                    langList.appendChild(li);
+                    
+                    // Add to all dropdowns
+                    addWordLangSelects.forEach(select => {
+                        if (!Array.from(select.options).some(opt => opt.value == lang.id)) {
+                            const opt = document.createElement('option');
+                            opt.value = lang.id;
+                            opt.textContent = lang.name;
+                            select.appendChild(opt);
+                        }
+                    });
+                } else {
+                    alert(data.error || "Failed to add language.");
+                }
+            } catch (err) {
+                console.error(err);
+            }
+        });
+    }
+
+    if (langList) {
+        langList.addEventListener('submit', async (e) => {
+            if (e.target && e.target.classList.contains('remove-language-form')) {
+                e.preventDefault();
+                const form = e.target;
+                const li = form.closest('li');
+                const langId = form.querySelector('input[name="language_id"]').value;
+                const langNameSpan = li.querySelector('span');
+                const langName = langNameSpan ? langNameSpan.textContent.trim() : '';
+                
+                try {
+                    const response = await fetch(form.action, {
+                        method: 'POST',
+                        body: new FormData(form),
+                        headers: { 'Accept': 'application/json' }
+                    });
+                    const data = await response.json();
+                    if (data.success) {
+                        li.remove();
+                        // Remove from dropdowns
+                        addWordLangSelects.forEach(select => {
+                            const opt = Array.from(select.options).find(opt => opt.value == langId);
+                            if (opt) opt.remove();
+                        });
+                        // Remove words from table dynamically
+                        document.querySelectorAll('.words-table tbody tr').forEach(tr => {
+                            if (tr.children.length >= 4 && tr.children[3].textContent.trim() === langName) {
+                                tr.remove();
+                            }
+                        });
+                    } else {
+                        alert("Failed to remove language.");
+                    }
+                } catch (err) {
+                    console.error(err);
+                }
+            }
+        });
+    }
+
+    // -- Words Asynchronous Logic --
+    
+    if (addWordForm) {
+        addWordForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const formData = new FormData(addWordForm);
+            try {
+                const response = await fetch('/word/add', {
+                    method: 'POST',
+                    body: formData,
+                    headers: { 'Accept': 'application/json' }
+                });
+                const data = await response.json();
+                
+                if (data.success) {
+                    addWordForm.reset();
+                    // Remove "No words" row if it exists
+                    const noWordsRow = document.querySelector('.words-table tbody tr td[colspan="5"]');
+                    if (noWordsRow) noWordsRow.parentElement.remove();
+                    
+                    const word = data.word;
+                    const tr = document.createElement('tr');
+                    tr.innerHTML = `
+                        <td>${word.original}</td>
+                        <td>${word.meaning}</td>
+                        <td>${word.topic}</td>
+                        <td>${word.language_name}</td>
+                        <td>
+                            <form action="/word/delete/${word.id}" method="POST" style="display:inline;" class="delete-word-form">
+                                <button type="submit" class="btn-icon delete-btn">Trash</button>
+                            </form>
+                        </td>
+                    `;
+                    wordsTableBody.appendChild(tr);
+                } else {
+                    alert(data.error || "Failed to add word.");
+                }
+            } catch (err) {
+                console.error(err);
+                alert("An error occurred.");
+            }
+        });
+    }
+
+    if (wordsTableBody) {
+        wordsTableBody.addEventListener('submit', async (e) => {
+            if (e.target && e.target.classList.contains('delete-word-form')) {
+                e.preventDefault();
+                const form = e.target;
+                const tr = form.closest('tr');
+                
+                try {
+                    const response = await fetch(form.action, {
+                        method: 'POST',
+                        headers: { 'Accept': 'application/json' }
+                    });
+                    const data = await response.json();
+                    
+                    if (data.success) {
+                        tr.remove();
+                    } else {
+                        alert("Failed to delete word.");
+                    }
+                } catch (err) {
+                    console.error(err);
+                    alert("An error occurred.");
+                }
+            }
+        });
+    }
+});
+</script>
 {% endblock %}

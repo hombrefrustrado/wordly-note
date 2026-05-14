@@ -1,3 +1,4 @@
+import json
 from flask import Blueprint, render_template, request, redirect, url_for, jsonify
 from app.extensions import db
 from app.models import User, Word, UserLanguage, Language
@@ -44,9 +45,19 @@ def learn():
         
     user_languages = user.languages
     words = Word.query.filter_by(user_id=user_id).all()
-    topics = list(set([w.topic for w in words if w.topic]))
     
-    return render_template("learn.html", user_languages=user_languages, topics=topics)
+    topics_by_language = {}
+    for w in words:
+        if w.topic:
+            lang_id = str(w.language_id)
+            if lang_id not in topics_by_language:
+                topics_by_language[lang_id] = set()
+            topics_by_language[lang_id].add(w.topic)
+            
+    for lang_id in topics_by_language:
+        topics_by_language[lang_id] = list(topics_by_language[lang_id])
+    
+    return render_template("learn.html", user_languages=user_languages, topics_by_language=topics_by_language)
 
 @general.route("/login",methods=["GET", "POST"])
 def login():
@@ -142,6 +153,16 @@ def add_language():
             new_ul = UserLanguage(user_id=user_id, language_id=language_id)
             db.session.add(new_ul)
             db.session.commit()
+            
+            if request.headers.get("Accept") == "application/json":
+                language = Language.query.get(language_id)
+                return jsonify({"success": True, "language": {"id": language.id, "name": language.name}})
+        else:
+            if request.headers.get("Accept") == "application/json":
+                return jsonify({"success": False, "error": "Language already added"}), 400
+                
+    if request.headers.get("Accept") == "application/json":
+        return jsonify({"success": False, "error": "Invalid input"}), 400
     return redirect(url_for("general.dash_board"))
 
 @general.route("/language/remove", methods=["POST"])
@@ -154,6 +175,12 @@ def remove_language():
         UserLanguage.query.filter_by(user_id=user_id, language_id=language_id).delete()
         Word.query.filter_by(user_id=user_id, language_id=language_id).delete()
         db.session.commit()
+        
+        if request.headers.get("Accept") == "application/json":
+            return jsonify({"success": True})
+            
+    if request.headers.get("Accept") == "application/json":
+        return jsonify({"success": False, "error": "Invalid input"}), 400
     return redirect(url_for("general.dash_board"))
 
 @general.route("/word/add", methods=["POST"])
@@ -167,9 +194,36 @@ def add_word():
     language_id = request.form.get("language_id")
     
     if original and meaning and language_id:
-        word = Word(original=original, meaning=meaning, topic=topic, language_id=language_id, user_id=user_id, difficulty=1)
-        db.session.add(word)
-        db.session.commit()
+        existing = Word.query.filter_by(
+            original=original, 
+            meaning=meaning, 
+            language_id=language_id, 
+            user_id=user_id
+        ).first()
+        
+        if not existing:
+            word = Word(original=original, meaning=meaning, topic=topic, language_id=language_id, user_id=user_id, difficulty=1)
+            db.session.add(word)
+            db.session.commit()
+            
+            if request.headers.get("Accept") == "application/json":
+                return jsonify({
+                    "success": True, 
+                    "word": {
+                        "id": word.id, 
+                        "original": word.original, 
+                        "meaning": word.meaning, 
+                        "topic": word.topic, 
+                        "language_name": word.language.name
+                    }
+                })
+        else:
+            if request.headers.get("Accept") == "application/json":
+                return jsonify({"success": False, "error": "Word already exists"}), 400
+                
+    if request.headers.get("Accept") == "application/json":
+        return jsonify({"success": False, "error": "Invalid input"}), 400
+        
     return redirect(url_for("general.dash_board"))
 
 @general.route("/word/delete/<int:word_id>", methods=["POST"])
@@ -179,6 +233,47 @@ def delete_word(word_id):
     
     Word.query.filter_by(id=word_id, user_id=user_id).delete()
     db.session.commit()
+    
+    if request.headers.get("Accept") == "application/json":
+        return jsonify({"success": True})
+        
+    return redirect(url_for("general.dash_board"))
+
+@general.route("/word/import", methods=["POST"])
+def import_words():
+    user_id = session.get("user_id")
+    if not user_id: return redirect(url_for("general.login"))
+    
+    language_id = request.form.get("language_id")
+    file = request.files.get("json_file")
+    
+    if not file or not language_id:
+        return "Missing file or language", 400
+        
+    try:
+        data = json.load(file)
+        if not isinstance(data, list):
+            return "JSON must be a list of objects", 400
+            
+        for item in data:
+            original = item.get("original")
+            meaning = item.get("meaning")
+            topic = item.get("topic", "General")
+            if original and meaning:
+                existing = Word.query.filter_by(
+                    original=original, 
+                    meaning=meaning, 
+                    language_id=language_id, 
+                    user_id=user_id
+                ).first()
+                
+                if not existing:
+                    word = Word(original=original, meaning=meaning, topic=topic, language_id=language_id, user_id=user_id, difficulty=1)
+                    db.session.add(word)
+        db.session.commit()
+    except Exception as e:
+        return f"Error processing JSON file: {str(e)}", 400
+        
     return redirect(url_for("general.dash_board"))
 
 @general.route("/api/swipe", methods=["POST"])

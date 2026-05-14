@@ -1,0 +1,332 @@
+[
+  {
+    "original": "hello",
+    "meaning": "hola",
+    "topic": "Basics"
+  },
+  {
+    "original": "goodbye",
+    "meaning": "adiós",
+    "topic": "Basics"
+  },
+  {
+    "original": "please",
+    "meaning": "por favor",
+    "topic": "Basics"
+  },
+  {
+    "original": "thank you",
+    "meaning": "gracias",
+    "topic": "Basics"
+  },
+  {
+    "original": "sorry",
+    "meaning": "lo siento",
+    "topic": "Basics"
+  },
+  {
+    "original": "yes",
+    "meaning": "sí",
+    "topic": "Basics"
+  },
+  {
+    "original": "no",
+    "meaning": "no",
+    "topic": "Basics"
+  },
+  {
+    "original": "friend",
+    "meaning": "amigo",
+    "topic": "People"
+  },
+  {
+    "original": "family",
+    "meaning": "familia",
+    "topic": "People"
+  },
+  {
+    "original": "teacher",
+    "meaning": "profesor",
+    "topic": "People"
+  },
+  {
+    "original": "student",
+    "meaning": "estudiante",
+    "topic": "People"
+  },
+  {
+    "original": "child",
+    "meaning": "niño",
+    "topic": "People"
+  },
+  {
+    "original": "doctor",
+    "meaning": "médico",
+    "topic": "People"
+  },
+  {
+    "original": "engineer",
+    "meaning": "ingeniero",
+    "topic": "People"
+  },
+  {
+    "original": "car",
+    "meaning": "coche",
+    "topic": "Transport"
+  },
+  {
+    "original": "bus",
+    "meaning": "autobús",
+    "topic": "Transport"
+  },
+  {
+    "original": "train",
+    "meaning": "tren",
+    "topic": "Transport"
+  },
+  {
+    "original": "airplane",
+    "meaning": "avión",
+    "topic": "Transport"
+  },
+  {
+    "original": "bicycle",
+    "meaning": "bicicleta",
+    "topic": "Transport"
+  },
+  {
+    "original": "road",
+    "meaning": "carretera",
+    "topic": "Transport"
+  },
+  {
+    "original": "ticket",
+    "meaning": "billete",
+    "topic": "Transport"
+  },
+  {
+    "original": "apple",
+    "meaning": "manzana",
+    "topic": "Food"
+  },
+  {
+    "original": "bread",
+    "meaning": "pan",
+    "topic": "Food"
+  },
+  {
+    "original": "water",
+    "meaning": "agua",
+    "topic": "Food"
+  },
+  {
+    "original": "coffee",
+    "meaning": "café",
+    "topic": "Food"
+  },
+  {
+    "original": "milk",
+    "meaning": "leche",
+    "topic": "Food"
+  },
+  {
+    "original": "rice",
+    "meaning": "arroz",
+    "topic": "Food"
+  },
+  {
+    "original": "cheese",
+    "meaning": "queso",
+    "topic": "Food"
+  },
+  {
+    "original": "breakfast",
+    "meaning": "desayuno",
+    "topic": "Food"
+  },
+  {
+    "original": "lunch",
+    "meaning": "almuerzo",
+    "topic": "Food"
+  },
+  {
+    "original": "dinner",
+    "meaning": "cena",
+    "topic": "Food"
+  },
+  {
+    "original": "house",
+    "meaning": "casa",
+    "topic": "Home"
+  },
+  {
+    "original": "kitchen",
+    "meaning": "cocina",
+    "topic": "Home"
+  },
+  {
+    "original": "bedroom",
+    "meaning": "dormitorio",
+    "topic": "Home"
+  },
+  {
+    "original": "window",
+    "meaning": "ventana",
+    "topic": "Home"
+  },
+  {
+    "original": "door",
+    "meaning": "puerta",
+    "topic": "Home"
+  },
+  {
+    "original": "chair",
+    "meaning": "silla",
+    "topic": "Home"
+  },
+  {
+    "original": "table",
+    "meaning": "mesa",
+    "topic": "Home"
+  },
+  {
+    "original": "computer",
+    "meaning": "ordenador",
+    "topic": "Technology"
+  },
+  {
+    "original": "keyboard",
+    "meaning": "teclado",
+    "topic": "Technology"
+  },
+  {
+    "original": "mouse",
+    "meaning": "ratón",
+    "topic": "Technology"
+  },
+  {
+    "original": "screen",
+    "meaning": "pantalla",
+    "topic": "Technology"
+  },
+  {
+    "original": "internet",
+    "meaning": "internet",
+    "topic": "Technology"
+  },
+  {
+    "original": "software",
+    "meaning": "software",
+    "topic": "Technology"
+  },
+  {
+    "original": "programming",
+    "meaning": "programación",
+    "topic": "Technology"
+  },
+  {
+    "original": "book",
+    "meaning": "libro",
+    "topic": "Education"
+  },
+  {
+    "original": "school",
+    "meaning": "escuela",
+    "topic": "Education"
+  },
+  {
+    "original": "university",
+    "meaning": "universidad",
+    "topic": "Education"
+  },
+  {
+    "original": "exam",
+    "meaning": "examen",
+    "topic": "Education"
+  },
+  {
+    "original": "lesson",
+    "meaning": "lección",
+    "topic": "Education"
+  },
+  {
+    "original": "notebook",
+    "meaning": "cuaderno",
+    "topic": "Education"
+  },
+  {
+    "original": "pen",
+    "meaning": "bolígrafo",
+    "topic": "Education"
+  },
+  {
+    "original": "happy",
+    "meaning": "feliz",
+    "topic": "Emotions"
+  },
+  {
+    "original": "sad",
+    "meaning": "triste",
+    "topic": "Emotions"
+  },
+  {
+    "original": "angry",
+    "meaning": "enfadado",
+    "topic": "Emotions"
+  },
+  {
+    "original": "afraid",
+    "meaning": "asustado",
+    "topic": "Emotions"
+  },
+  {
+    "original": "excited",
+    "meaning": "emocionado",
+    "topic": "Emotions"
+  },
+  {
+    "original": "tired",
+    "meaning": "cansado",
+    "topic": "Emotions"
+  },
+  {
+    "original": "calm",
+    "meaning": "tranquilo",
+    "topic": "Emotions"
+  },
+  {
+    "original": "sun",
+    "meaning": "sol",
+    "topic": "Nature"
+  },
+  {
+    "original": "moon",
+    "meaning": "luna",
+    "topic": "Nature"
+  },
+  {
+    "original": "tree",
+    "meaning": "árbol",
+    "topic": "Nature"
+  },
+  {
+    "original": "river",
+    "meaning": "río",
+    "topic": "Nature"
+  },
+  {
+    "original": "mountain",
+    "meaning": "montaña",
+    "topic": "Nature"
+  },
+  {
+    "original": "rain",
+    "meaning": "lluvia",
+    "topic": "Nature"
+  },
+  {
+    "original": "wind",
+    "meaning": "viento",
+    "topic": "Nature"
+  }
+]

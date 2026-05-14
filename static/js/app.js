@@ -10,6 +10,10 @@ document.addEventListener('DOMContentLoaded', () => {
     // Convert NodeList to Array
     let cardsArray = Array.from(cards);
 
+    let rememberedCount = 0;
+    let forgotCount = 0;
+    let xpEarned = 0;
+
     function handleSwipe(card, action) {
         const wordId = card.getAttribute('data-id');
         
@@ -18,6 +22,14 @@ document.addEventListener('DOMContentLoaded', () => {
         card.style.transition = 'transform 0.5s ease-out, opacity 0.5s ease-out';
         card.style.transform = `translate(${flyX}px, -50px) rotate(${action === 'right' ? 30 : -30}deg)`;
         card.style.opacity = '0';
+
+        if (action === 'right') {
+            rememberedCount++;
+            xpEarned += 10;
+        } else {
+            forgotCount++;
+            xpEarned += 2;
+        }
 
         // Send API request
         fetch('/api/swipe', {
@@ -34,7 +46,16 @@ document.addEventListener('DOMContentLoaded', () => {
             card.remove();
             cardsArray = cardsArray.filter(c => c !== card);
             if (cardsArray.length === 0 && endMessage) {
+                document.getElementById('stat-remembered').innerText = rememberedCount;
+                document.getElementById('stat-forgot').innerText = forgotCount;
+                const total = rememberedCount + forgotCount;
+                const accuracy = total > 0 ? Math.round((rememberedCount / total) * 100) : 0;
+                document.getElementById('stat-accuracy').innerText = accuracy + "%";
+                document.getElementById('stat-xp').innerText = "+" + xpEarned;
                 endMessage.style.display = 'block';
+                
+                const controls = document.querySelector('.swipe-controls');
+                if (controls) controls.style.display = 'none';
             }
         }, 500);
     }
@@ -120,9 +141,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Button controls
     if(btnLeft) btnLeft.addEventListener('click', () => {
-        if(cardsArray.length > 0) handleSwipe(cardsArray[cardsArray.length-1], 'left');
+        if(cardsArray.length > 0) handleSwipe(cardsArray[0], 'left');
     });
     if(btnRight) btnRight.addEventListener('click', () => {
-        if(cardsArray.length > 0) handleSwipe(cardsArray[cardsArray.length-1], 'right');
+        if(cardsArray.length > 0) handleSwipe(cardsArray[0], 'right');
     });
 });

@@ -22,10 +22,23 @@
                 </div>
             </div>
             {% endfor %}
-            <div class="end-message" id="end-message" style="display: none;">
-                <h2>Session Complete!</h2>
-                <p>Great job practicing!</p>
-                <a href="/learn" class="btn btn-primary">Start New Session</a>
+            <div class="end-message dash-card" id="end-message" style="display: none; width: 100%; max-width: 400px; padding: 2rem;">
+                <h2 style="color: var(--primary); margin-bottom: 1rem;">Session Complete!</h2>
+                <div class="stats-container" style="display: flex; justify-content: space-around; gap: 1rem; margin-bottom: 1.5rem;">
+                    <div class="stat-box" style="text-align: center; flex: 1; padding: 1rem; background: rgba(16, 185, 129, 0.1); border-radius: 12px; border: 1px solid var(--success);">
+                        <h3 style="color: var(--success); font-size: 2rem; margin: 0;" id="stat-remembered">0</h3>
+                        <p style="color: var(--text-muted); font-size: 0.9rem; margin: 0;">Remembered</p>
+                    </div>
+                    <div class="stat-box" style="text-align: center; flex: 1; padding: 1rem; background: rgba(239, 68, 68, 0.1); border-radius: 12px; border: 1px solid var(--danger);">
+                        <h3 style="color: var(--danger); font-size: 2rem; margin: 0;" id="stat-forgot">0</h3>
+                        <p style="color: var(--text-muted); font-size: 0.9rem; margin: 0;">Forgot</p>
+                    </div>
+                </div>
+                <div style="margin-bottom: 1.5rem; text-align: left; padding: 0 1rem;">
+                    <p style="font-weight: 600; font-size: 1.1rem; margin-bottom: 0.5rem; display: flex; justify-content: space-between;">Accuracy: <span id="stat-accuracy" style="color: var(--primary);">0%</span></p>
+                    <p style="font-weight: 600; font-size: 1.1rem; display: flex; justify-content: space-between;">XP Earned: <span id="stat-xp" style="color: var(--primary);">+0</span></p>
+                </div>
+                <a href="/learn" class="btn btn-primary" style="width: 100%;">Start New Session</a>
             </div>
         {% else %}
             <div class="end-message">
