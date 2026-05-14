@@ -1,4 +1,5 @@
 import json
+import random
 from flask import Blueprint, render_template, request, redirect, url_for, jsonify
 from app.extensions import db
 from app.models import User, Word, UserLanguage, Language
@@ -38,9 +39,19 @@ def learn():
     
     language_id = request.args.get("language_id")
     topic = request.args.get("topic")
+    limit = request.args.get("limit", "20")
     
     if language_id and topic:
         words = Word.query.filter_by(user_id=user_id, language_id=language_id, topic=topic).all()
+        random.shuffle(words)
+        
+        if limit != "all":
+            try:
+                limit_int = int(limit)
+                words = words[:limit_int]
+            except ValueError:
+                words = words[:20]
+                
         return render_template("flashcards.html", words=words, language_id=language_id, topic=topic)
         
     user_languages = user.languages

@@ -13,6 +13,7 @@ document.addEventListener('DOMContentLoaded', () => {
     let rememberedCount = 0;
     let forgotCount = 0;
     let xpEarned = 0;
+    let forgotWords = [];
 
     function handleSwipe(card, action) {
         const wordId = card.getAttribute('data-id');
@@ -29,6 +30,9 @@ document.addEventListener('DOMContentLoaded', () => {
         } else {
             forgotCount++;
             xpEarned += 2;
+            const originalText = card.querySelector('.card-front h3').innerText;
+            const meaningText = card.querySelector('.card-back h3').innerText;
+            forgotWords.push({ original: originalText, meaning: meaningText });
         }
 
         // Send API request
@@ -52,6 +56,19 @@ document.addEventListener('DOMContentLoaded', () => {
                 const accuracy = total > 0 ? Math.round((rememberedCount / total) * 100) : 0;
                 document.getElementById('stat-accuracy').innerText = accuracy + "%";
                 document.getElementById('stat-xp').innerText = "+" + xpEarned;
+                
+                const forgotListContainer = document.getElementById('forgot-words-list');
+                if (forgotListContainer) {
+                    if (forgotWords.length > 0) {
+                        forgotListContainer.innerHTML = '<h4 style="color: var(--text); margin-bottom: 0.5rem; font-size: 1rem;">Palabras a repasar:</h4><ul style="list-style-type: none; padding: 0; margin: 0; font-size: 0.9rem;">' + 
+                            forgotWords.map(w => `<li style="padding: 0.5rem 0; border-bottom: 1px solid var(--border); color: var(--text-muted);"><strong>${w.original}</strong>: ${w.meaning}</li>`).join('') +
+                            '</ul>';
+                        forgotListContainer.style.display = 'block';
+                    } else {
+                        forgotListContainer.style.display = 'none';
+                    }
+                }
+                
                 endMessage.style.display = 'block';
                 
                 const controls = document.querySelector('.swipe-controls');
