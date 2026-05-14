@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<header>
+    <meta charset="UTF8">
+    
+    <title>
+        {% block title %}
+            EnglishApp
+        {% endblock %}
+    </title>
+
+    <link rel="icon" type="image/x-icon" href="{{ url_for('static', filename='logo.png') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+
+    {% block extra_head %}
+    {% endblock %}
+
+</header>
+<body>
+    <nav class="navbar">
+        <div class="nav-logo">
+            EnglishApp
+        </div>
+
+        <ul class="nav-links">
+            <li><a href="/">Home</a></li>
+            <li><a href="/learn">Learn</a></li>
+            <li><a href="/login">Login</a></li>
+            <li><a href="/register">Register</a></li>
+        </ul>
+    </nav>
+
+
+    <main class="content">
+
+        {% block content %}
+        {% endblock %}
+
+    </main>
+</body>
