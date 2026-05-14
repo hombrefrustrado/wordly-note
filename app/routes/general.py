@@ -80,6 +80,8 @@ def registration():
         if not username or not password:
             return "Missing credentials", 400
         
+        if len(password) < 10:
+            return "Password must be at least 10 characters long", 400
 
         accepted_terms = request.form.get("terms")
         # comprobar si respondio los terminos y condiciones
