@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+
+{% block title %}
+    Register
+{% endblock %}
+
+
+{% block content %}
+    Hello world!
+    <form method="post" action="/register">
+
+        <label>Username</label>
+        <input type="text" name="username">
+        <br>
+
+        <label>Password</label>
+        <input type="password" name="password">
+        <br>
+
+        <label>
+            <input type="checkbox" name="terms" required>
+            I accept the terms and conditions
+        </label>
+        <br>
+
+        <button type="reset">
+            Eliminar
+        </button>
+        <button type="submit">
+            Registrarse
+        </button>
+    </form>
+{% endblock %}
