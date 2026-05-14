@@ -130,7 +130,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 handleSwipe(card, 'left');
             } else {
                 card.style.transition = 'transform 0.3s ease';
-                card.style.transform = card.classList.contains('flipped') ? 'rotateY(180deg)' : '';
+                card.style.transform = '';
             }
             moveX = 0; moveY = 0;
         });
