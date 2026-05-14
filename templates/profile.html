@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+
+{% block title %}
+    Profile - {{ user.username }}
+{% endblock %}
+
+{% block content %}
+<div class="profile-container" style="max-width: 600px; margin: 0 auto; padding: 20px; text-align: center;">
+    <h2>User Profile</h2>
+    
+    <div class="profile-info" style="margin: 20px 0; padding: 20px; background-color: #f9f9f9; border-radius: 8px;">
+        <p style="font-size: 1.2rem; margin-bottom: 10px;"><strong>Username:</strong> {{ user.username }}</p>
+        <p style="font-size: 1.2rem; margin-bottom: 10px;"><strong>XP:</strong> {{ user.xp }}</p>
+    </div>
+
+    <div class="delete-account-section" style="margin-top: 40px; padding-top: 20px; border-top: 1px solid #eee;">
+        <h3 style="color: #e74c3c;">Danger Zone</h3>
+        <p style="margin-bottom: 15px; color: #666;">Once you delete your account, there is no going back. Please be certain.</p>
+        
+        <form action="{{ url_for('general.profile') }}" method="POST" onsubmit="return confirm('Are you sure you want to delete your account? This action cannot be undone and will delete all your data.');">
+            <button type="submit" style="background-color: #e74c3c; color: white; border: none; padding: 10px 20px; border-radius: 4px; cursor: pointer; font-size: 1rem;">Delete My Account</button>
+        </form>
+    </div>
+</div>
+{% endblock %}
